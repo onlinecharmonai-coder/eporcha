@@ -181,6 +181,7 @@ const $=id=>document.getElementById(id);
 const MAP_ROOTS=[{name:'ময়মনসিংহ',rootId:'1yz7rvncGb7_mmX8LpXQ9i9uXqCyNtXIy'},{name:'সিলেট',rootId:'1SK9lMCsSILn63th-Pea9vx1z6GcatJdA'},{name:'রংপুর',rootId:'1qBFuGLwumUBaqmBfMgRInF5JlBfMnvUI'},{name:'রাজশাহী',rootId:'1zTknpGYjKU2PkVYda0VZ6lcCLMaAeTq2'},{name:'খুলনা',rootId:'1Ecdt0T-kCp_A2SU0_cIQ1koJVs7lRU9Y'},{name:'ঢাকা',rootId:'1sP964F_b1GGxdjMNvmlgbiG7RRdtsfEA'},{name:'চট্টগ্রাম',rootId:'11U2Kni2vidrhCfD2JuK_vshognSGceQR'},{name:'বরিশাল',rootId:'1wLlBTplC2Z_Ll3o3puDhOLDABnCHTA9Z'}];
 let mode='survey', divisions=[], districts=[], upazilas=[], surveys=[], mouzas=[], khatians=[];
 let sel={div:null,dis:null,upa:null,sur:null,mou:null}, currentKhatian=null, currentDetail=null;
+const SURVEY_KEY_BY_ID={1:'CS',2:'RS',3:'SA',4:'BS',5:'DIARA',6:'PETY',7:'BRS',8:'BDS'};
 async function api(path,params={}){const q=new URLSearchParams({path,...params});const r=await fetch('/api/dlrms?'+q);if(!r.ok)throw new Error('API '+r.status);const j=await r.json();if(!j.success)throw new Error(j.message||'API error');return j.data;}
 async function postApi(url,body){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return r;}
 function setStatus(t){$('status').textContent=t;}
@@ -211,11 +212,11 @@ async function loadMouzas(){
   setStatus('মৌজার তালিকা লোড হচ্ছে…');
   const params={DISTRICT_BBS_CODE:sel.dis.BBS_CODE,UPAZILA_BBS_CODE:sel.upa.BBS_CODE,X_DISTRICT_EN:sel.dis.NAME_EN,X_UPAZILA_EN:sel.upa.NAME_EN};
   if(mode==='namjari'){params.SURVEY='MUTATION';params.X_SURVEY_KEY='MUTATION';}
-  else{const s=surveys.find(x=>x.SURVEY_ID===sel.sur.SURVEY_ID);params.X_SURVEY_KEY=s?(s.KEY||''):'';params.SURVEY_ID=sel.sur.SURVEY_ID;}
+  else{const s=surveys.find(x=>x.SURVEY_ID===sel.sur.SURVEY_ID);params.X_SURVEY_KEY=s?((s.KEY||SURVEY_KEY_BY_ID[s.SURVEY_ID]||'')):'';params.SURVEY_ID=sel.sur.SURVEY_ID;}
   try{mouzas=await api('mouzas/jl-numbers',params);setStatus('মৌজা পাওয়া গেছে: '+mouzas.length+'টি — একটি বাছাই করুন।');}catch(e){mouzas=[];setStatus('মৌজার তালিকা লোড করতে সমস্যা হয়েছে। একটু পরে আবার চেষ্টা করুন।');}
   renderLists();
 }
-function surveyKeyForKhatian(){if(mode==='namjari')return 'MUTATION';const s=surveys.find(x=>x.SURVEY_ID===(sel.sur?sel.sur.SURVEY_ID:null));return s?(s.KEY||'').toUpperCase():'';}
+function surveyKeyForKhatian(){if(mode==='namjari')return 'MUTATION';const s=surveys.find(x=>x.SURVEY_ID===(sel.sur?sel.sur.SURVEY_ID:null));return s?((s.KEY||SURVEY_KEY_BY_ID[s.SURVEY_ID]||'').toUpperCase()):'';}
 async function loadKhatians(){
   if(!sel.mou)return;setStatus('খতিয়ান তালিকা লোড হচ্ছে…');$('kBody').innerHTML='<tr><td colspan="5">তথ্য লোড হচ্ছে…</td></tr>';
   const survey=surveyKeyForKhatian();
