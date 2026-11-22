@@ -192,13 +192,13 @@ async function init(){
   try{setStatus('তথ্য লোড হচ্ছে…');const [d,di,u,s]=await Promise.all([api('divisions'),api('districts'),api('upazilas'),api('surveys')]);divisions=d;districts=di;upazilas=u;surveys=s;setStatus('লাইভ ডাটা: '+d.length+' বিভাগ, '+di.length+' জেলা, '+u.length+' উপজেলা — API থেকে তাজা তথ্য আসছে।');renderLists();renderMapDivs();}
   catch(e){setStatus('তথ্য লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন। ('+esc(e.message)+')');}
 }
-function listHtml(items,selId,fn,label){if(!items.length)return '<div class="empty">কোনো তথ্য পাওয়া যায়নি।</div>';return items.map((it,i)=>'<button class="'+(selId===it.ID||selId===it.id?'sel':'')+'" onclick="'+fn+'('+i+')">'+esc(label(it))+'</button>').join('');}
+function listHtml(items,selId,fn,label){if(!items.length)return '<div class="empty">কোনো তথ্য পাওয়া যায়নি।</div>';return items.map((it,i)=>'<button class="'+(selId===it.ID||selId===it.id||selId===it.SURVEY_ID?'sel':'')+'" onclick="'+fn+'('+i+')">'+esc(label(it))+'</button>').join('');}
 function renderLists(){
   const fd=$('fDiv').value.trim(),fdi=$('fDis').value.trim(),fu=$('fUpa').value.trim(),fm=$('fMou').value.trim();
   $('listDiv').innerHTML=listHtml(divisions.filter(x=>!fd||x.NAME.includes(fd)),sel.div?sel.div.ID:null,'pickDiv',x=>x.NAME);
   $('listDis').innerHTML=sel.div?listHtml(districts.filter(x=>x.DIVISION_BBS_CODE===sel.div.BBS_CODE&&(!fdi||x.NAME.includes(fdi))),sel.dis?sel.dis.ID:null,'pickDis',x=>x.NAME):'<div class="empty">প্রথমে বিভাগ নির্বাচন করুন।</div>';
   $('listUpa').innerHTML=sel.dis?listHtml(upazilas.filter(x=>x.DISTRICT_BBS_CODE===sel.dis.BBS_CODE&&(!fu||x.NAME.includes(fu))),sel.upa?sel.upa.ID:null,'pickUpa',x=>x.NAME):'<div class="empty">প্রথমে জেলা নির্বাচন করুন।</div>';
-  $('listSur').innerHTML=mode==='namjari'?'<button class="sel">নামজারি (Mutation)</button>':(sel.upa?listHtml(surveys,sel.sur?sel.sur.SURVEY_ID:null,'pickSur',x=>x.LOCAL_NAME+' ('+x.SURVEY_ID+')'):'<div class="empty">প্রথমে উপজেলা নির্বাচন করুন।</div>');
+  $('listSur').innerHTML=mode==='namjari'?'<button class="sel">নামজারি (Mutation)</button>':(sel.upa?listHtml(surveys,sel.sur?sel.sur.SURVEY_ID:null,'pickSur',x=>(x.LOCAL_NAME||x.NAME||'')+' ('+(x.SURVEY_ID||x.ID||'')+')'):'<div class="empty">প্রথমে উপজেলা নির্বাচন করুন।</div>');
   $('listMou').innerHTML=mouzas.length?listHtml(mouzas.filter(x=>!fm||x.MOUZA_NAME.includes(fm)||String(x.JL_NUMBER).includes(fm)),sel.mou?sel.mou.ID:null,'pickMou',x=>x.JL_NUMBER+' · '+x.MOUZA_NAME):'<div class="empty">প্রথমে সার্ভে নির্বাচন করুন।</div>';
 }
 window.pickDiv=i=>{sel.div=divisions.filter(x=>!$('fDiv').value.trim()||x.NAME.includes($('fDiv').value.trim()))[i];sel.dis=sel.upa=sel.sur=sel.mou=null;mouzas=[];khatians=[];renderLists();renderKhatians();};
