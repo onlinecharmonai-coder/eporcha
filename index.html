@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ePorcha (ই পর্চা): ফ্রি খতিয়ান অনুসন্ধান ও মৌজা ম্যাপ</title>
+<meta name="description" content="বিভাগ, জেলা, উপজেলা, জরিপ ও মৌজা বেছে বিনামূল্যে খতিয়ান ও মৌজা ম্যাপ খুঁজুন।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#0a2e1d;--accent:#0e7a4a;--accent2:#0b5c39;--bg:#f3f6f1;--card:#fff;--line:#dfe7dc;--ink:#17211b;--muted:#5b6b60}
+body{font-family:'Hind Siliguri',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+a{color:var(--accent);text-decoration:none}
+.topbar{background:var(--green);color:#fff;text-align:center;padding:8px 12px;font-size:14px}
+.topbar a{background:#fff;color:var(--green);padding:2px 12px;border-radius:20px;font-weight:700;margin-left:8px;display:inline-block}
+header{background:#fff;position:sticky;top:0;z-index:50;border-bottom:1px solid var(--line)}
+.head{max-width:1150px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 14px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;color:var(--green)}
+.logo .mark{background:var(--green);color:#fff;border-radius:10px;padding:6px 10px;font-size:13px;line-height:1.2;text-align:center}
+nav{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+nav a{color:var(--ink);padding:6px 10px;border-radius:8px;font-size:14px}
+nav a:hover,nav a.active{background:#e6f2ea;color:var(--accent2)}
+.hero{background:linear-gradient(180deg,rgba(10,46,29,.92),rgba(10,46,29,.78)),#0a2e1d;color:#fff;padding:44px 16px 54px;text-align:center}
+.hero h1{font-size:clamp(24px,4.5vw,40px);line-height:1.3}
+.badge{display:inline-block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);padding:4px 14px;border-radius:20px;font-size:13px;margin-bottom:12px}
+.hero p{max-width:760px;margin:12px auto 20px;color:#d9eadf}
+.btn{display:inline-block;background:var(--accent);color:#fff;padding:11px 22px;border-radius:10px;font-weight:700;border:0;cursor:pointer;font-size:15px}
+.btn.ghost{background:transparent;border:1px solid #fff}
+.btn.small{padding:7px 12px;font-size:13px}
+.btn:disabled{opacity:.55;cursor:wait}
+.wrap{max-width:1150px;margin:auto;padding:0 14px}
+section{padding:28px 0}
+h2{font-size:24px;margin-bottom:6px}
+.sub{color:var(--muted);margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.card h3{font-size:17px;margin-bottom:6px}
+.card p{color:var(--muted);font-size:14px}
+.card a{font-weight:700;font-size:14px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px}
+.modes{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.mode{flex:1;min-width:220px;border:2px solid var(--line);border-radius:12px;padding:12px;cursor:pointer;background:#fff}
+.mode.active{border-color:var(--accent);background:#eef7f0}
+.mode b{display:block}.mode span{font-size:13px;color:var(--muted)}
+.steps{background:#eef4ec;border:1px dashed #b9cdbd;border-radius:12px;padding:12px 16px;margin:12px 0;font-size:14px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+@media(max-width:900px){.grid5{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.grid5{grid-template-columns:1fr}}
+.col{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;min-height:300px;display:flex;flex-direction:column}
+.col h4{padding:10px 12px;background:#f6f8f5;border-bottom:1px solid var(--line);font-size:14px}
+.col input{width:100%;padding:9px 10px;border:0;border-bottom:1px solid var(--line);outline:none;font-family:inherit}
+.list{overflow-y:auto;max-height:320px;padding:6px}
+.list button{display:block;width:100%;text-align:left;background:none;border:0;padding:9px 10px;border-radius:8px;cursor:pointer;font-family:inherit;font-size:14px}
+.list button:hover{background:#eef7f0}
+.list button.sel{background:var(--accent);color:#fff;font-weight:700}
+.list .empty{color:var(--muted);padding:12px;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#f6f8f5}
+.searchbox{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin:10px 0;font-family:inherit}
+.pill{display:inline-block;background:#e6f2ea;color:var(--accent2);padding:2px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.faq button{width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 14px;margin-bottom:8px;cursor:pointer;font-family:inherit;font-size:15px;font-weight:600}
+.faq .ans{display:none;padding:0 14px 14px;color:var(--muted)}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.links a{display:block;padding:8px 0;border-bottom:1px solid #eef1ec}
+footer{background:var(--green);color:#cfe6d8;padding:28px 16px;margin-top:20px}
+footer .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+footer h4{color:#fff;margin-bottom:10px}
+footer a{color:#cfe6d8;display:block;padding:3px 0}
+.copy{text-align:center;padding:14px;color:#9db8a8;font-size:13px;border-top:1px solid rgba(255,255,255,.15);margin-top:20px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-start;justify-content:center;padding:20px;z-index:99;overflow:auto}
+.modal.open{display:flex}
+.modal .box{background:#fff;border-radius:14px;max-width:640px;width:100%;padding:20px}
+.modal h3{margin-bottom:10px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 10px;font-size:14px;margin:12px 0}
+.kv b{color:var(--muted)}
+.notice{background:#fff8e1;border:1px solid #f0d48a;border-radius:10px;padding:10px 12px;font-size:13px;margin:12px 0}
+@media(max-width:640px){table{font-size:13px}.kv{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="topbar">সকল মৌজার ম্যাপ আপনার Google Drive-এ <a href="#mouza-map">এখনই কিনুন</a></div>
+<header><div class="head">
+<div class="logo"><span class="mark">খতিয়ান<br>অনুসন্ধান</span> eporcha.tech</div>
+<nav><a class="active" href="#">হোম</a><a href="#registry">সার্ভে খতিয়ান</a><a href="#registry">নামজারী খতিয়ান</a><a href="#registry">মৌজা ভিত্তিক খতিয়ান বই</a><a href="#mouza-map">মৌজা ম্যাপ</a><a href="#support">নির্দেশিকা</a><a href="#support">যোগাযোগ</a></nav>
+</div></header>
+<div class="hero">
+<span class="badge">স্বাধীন তথ্যসহায়ক প্ল্যাটফর্ম</span>
+<h1>ePorcha: ফ্রি খতিয়ান অনুসন্ধান ও মৌজা ম্যাপ</h1>
+<p>বিভাগ, জেলা, উপজেলা, জরিপ ও মৌজা বেছে বিনামূল্যে উপলভ্য খতিয়ান ও মৌজা ম্যাপ খুঁজুন। এটি সরকারি পোর্টাল নয়; সরকারি আবেদন, সার্টিফাইড কপি ও নির্ধারিত ফি-সংক্রান্ত কাজে সংশ্লিষ্ট সরকারি পোর্টাল ব্যবহার করুন।</p>
+<a class="btn" href="#registry">খতিয়ান অনুসন্ধান শুরু করুন</a>
+<a class="btn ghost" href="#support">নির্দেশিকা দেখুন</a>
+</div>
+<div class="wrap">
+<section>
+<h2>নাগরিক সেবার দ্রুত অ্যাক্সেস</h2>
+<p class="sub">খতিয়ান ও উপলভ্য মৌজা ম্যাপ অনুসন্ধান বিনামূল্যে, নিবন্ধন ছাড়াই ব্যবহার করুন। সরকারি আবেদন বা পেমেন্ট এই সাইটে পরিচালিত হয় না। <a href="#support">সহায়তা প্রয়োজন?</a></p>
+<div class="cards">
+<div class="card"><h3>সার্ভে খতিয়ান</h3><p>বিনামূল্যে উপলভ্য সার্ভে খতিয়ান অনুসন্ধান করুন এবং ফল দেখুন।</p><a href="#registry">বিস্তারিত দেখুন →</a></div>
+<div class="card"><h3>নামজারী খতিয়ান</h3><p>নামজারি খতিয়ান সম্পর্কে জানুন ও উপলভ্য তথ্য অনুসন্ধান করুন।</p><a href="#registry">বিস্তারিত দেখুন →</a></div>
+<div class="card"><h3>মৌজা ভিত্তিক খতিয়ান বই</h3><p>একটি মৌজার উপলভ্য খতিয়ান বই PDF হিসেবে বিনামূল্যে তৈরি করুন।</p><a href="#registry">বিস্তারিত দেখুন →</a></div>
+<div class="card"><h3>মৌজা ভিত্তিক দাগ বই</h3><p>একটি মৌজার দাগ বই খতিয়ানসহ PDF আকারে বিনামূল্যে তৈরি করুন।</p><a href="#registry">বিস্তারিত দেখুন →</a></div>
+<div class="card"><h3>মৌজা ম্যাপ</h3><p>উপলভ্য মৌজা ম্যাপ বিনামূল্যে খুঁজুন ও সংগ্রহ করুন।</p><a href="#mouza-map">বিস্তারিত দেখুন →</a></div>
+<div class="card"><h3>আবেদনের অবস্থা</h3><p>সরকারি আবেদনের অবস্থার সঠিক পোর্টাল ও নির্দেশনা জানুন।</p><a href="#support">বিস্তারিত দেখুন →</a></div>
+<div class="card"><h3>নির্দেশিকা</h3><p>ডাউনলোডযোগ্য নির্দেশিকা ও সহায়ক ফর্ম।</p><a href="#support">বিস্তারিত দেখুন →</a></div>
+</div>
+</section>
+<section id="registry" class="panel">
+<h2 id="regTitle">সার্ভে খতিয়ানের তথ্য <span class="pill">হালনাগাদ তথ্য · সক্রিয়</span></h2>
+<p class="sub">বিভাগ, জেলা, উপজেলা, সার্ভে ও মৌজা বাছাই করে খতিয়ান তালিকা দেখুন। খতিয়ান নম্বর বা দাগ নম্বর দিয়ে খুঁজুন। তথ্যসূত্র: land.gov.bd</p>
+<div class="modes">
+<div class="mode active" id="modeSurvey" onclick="setMode('survey')"><b>সার্ভে খতিয়ান</b><span>বিভিন্ন সার্ভে অনুযায়ী খতিয়ানের ধরন বাছাই করে অনুসন্ধান করুন।</span></div>
+<div class="mode" id="modeNamjari" onclick="setMode('namjari')"><b>নামজারী খতিয়ান</b><span>নামজারী (Mutation) রেকর্ড দ্রুত অনুসন্ধান করুন, সার্ভে বাছাই প্রয়োজন নেই।</span></div>
+</div>
+<div class="steps"><b>কিভাবে তথ্য ব্রাউজ করবেন?</b><br>১. বিভাগ → জেলা → উপজেলা ক্রমানুসারে নির্বাচন করুন।<br>২. <span id="step2">সার্ভে ধরন নির্বাচন করে মৌজার তালিকা থেকে JL নম্বর বাছাই করুন।</span><br>৩. খতিয়ান তালিকা স্বয়ংক্রিয়ভাবে লোড হবে। খতিয়ান নম্বর, দাগ নম্বর, মালিক বা অভিভাবকের নাম দিয়ে খুঁজুন।</div>
+<div id="status" class="notice">তথ্য লোড হচ্ছে…</div>
+<div class="grid5">
+<div class="col"><h4>বিভাগ</h4><input id="fDiv" placeholder="বিভাগের নাম লিখুন" oninput="renderLists()"><div class="list" id="listDiv"></div></div>
+<div class="col"><h4>জেলা</h4><input id="fDis" placeholder="জেলার নাম লিখুন" oninput="renderLists()"><div class="list" id="listDis"></div></div>
+<div class="col"><h4>উপজেলা / থানা</h4><input id="fUpa" placeholder="উপজেলার নাম লিখুন" oninput="renderLists()"><div class="list" id="listUpa"></div></div>
+<div class="col"><h4>খতিয়ানের ধরন</h4><div class="list" id="listSur"></div></div>
+<div class="col"><h4>মৌজা (JL নম্বর)</h4><input id="fMou" placeholder="মৌজা বা জে.এল. নং লিখুন" oninput="renderLists()"><div class="list" id="listMou"></div></div>
+</div>
+<h3 style="margin-top:18px">খতিয়ান তালিকা</h3>
+<p id="kCount" class="sub">খতিয়ান দেখতে মৌজা নির্বাচন করুন।</p>
+<input class="searchbox" id="kSearch" placeholder="খতিয়ান নম্বর, দাগ নম্বর, মালিক বা অভিভাবকের নাম দিয়ে অনুসন্ধান করুন" oninput="renderKhatians()">
+<div style="overflow-x:auto"><table><thead><tr><th>খতিয়ান নম্বর</th><th>মালিক / দলিলধারী</th><th>দাগ নম্বর</th><th>মোট জমি (একর)</th><th>দেখুন / ডাউনলোড</th></tr></thead><tbody id="kBody"><tr><td colspan="5">খতিয়ান দেখতে মৌজা নির্বাচন করুন।</td></tr></tbody></table></div>
+<div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" onclick="downloadBook()">পুরো মৌজার খতিয়ান বই ডাউনলোড (প্রিন্টযোগ্য)</button><button class="btn small" style="background:#fff;color:var(--accent);border:1px solid var(--accent)" onclick="resetAll()">নতুন করে খুঁজুন</button></div>
+</section>
+<section id="mouza-map" class="panel">
+<h2>মৌজা ম্যাপ (PDF)</h2>
+<p class="sub">ম্যাপ দেখতে নিচের ধাপগুলো নির্বাচন করুন। বিভাগ বাছাই করলে জেলা ফোল্ডার, তারপর উপজেলা ও ম্যাপ ফাইল আসবে।</p>
+<div class="grid5" style="grid-template-columns:repeat(3,1fr)">
+<div class="col"><h4>বিভাগ (ম্যাপ)</h4><div class="list" id="mapDiv"></div></div>
+<div class="col"><h4>ফোল্ডার / ফাইল</h4><div class="list" id="mapList"><div class="empty">বিভাগ নির্বাচন করুন।</div></div></div>
+<div class="col"><h4>প্রিভিউ</h4><div style="padding:12px;font-size:14px" id="mapPreview">তালিকা থেকে একটি ম্যাপ নির্বাচন করলে প্রিভিউ এখানে দেখা যাবে।</div></div>
+</div>
+</section>
+<section id="support">
+<div class="three">
+<div class="panel faq"><h2>সচরাচর জিজ্ঞাসা</h2><p class="sub">নাগরিকদের সাধারণ প্রশ্নের উত্তর এক জায়গায়।</p>
+<button onclick="toggleFaq(this)">কিভাবে অনলাইন খতিয়ান অনুসন্ধান শুরু করব?</button><div class="ans">হোমপেজে থাকা “খতিয়ান অনুসন্ধান শুরু করুন” বোতামে ক্লিক করে জেলা, মৌজা, দাগ বা খতিয়ান নম্বর দিয়ে অনুসন্ধান করুন। ফলাফল সঙ্গে সঙ্গে স্ক্রিনে দেখা যাবে।</div>
+<button onclick="toggleFaq(this)">দাগ বা খতিয়ান নম্বর না থাকলে কি করতে হবে?</button><div class="ans">জেলা, উপজেলা, মৌজা ও জরিপের তথ্য মিলিয়ে দেখুন। এই সাইটে উপলভ্য অনুসন্ধান বিকল্পে ফল না এলে সরকারি ভূমি সেবার পোর্টাল বা স্থানীয় ভূমি অফিসের নির্দেশনা নিন।</div>
+<button onclick="toggleFaq(this)">নামজারি আবেদনের অগ্রগতি কোথা থেকে দেখব?</button><div class="ans">নামজারি আবেদনের status সরকারি mutation portal-এ দেখুন। এই সাইট সরকারি আবেদন বা login পরিচালনা করে না।</div>
+<button onclick="toggleFaq(this)">ফ্রি মৌজা ম্যাপ ডাউনলোড কি সম্ভব?</button><div class="ans">মৌজা ম্যাপ অংশে উপলভ্য ম্যাপ দেখুন। কভারেজ ও ফাইলের ধরন এলাকা ও উৎসভেদে বদলাতে পারে; সরকারি কাজে সরকারি পোর্টালের বর্তমান নির্দেশনা অনুসরণ করুন।</div>
+</div>
+<div class="panel links"><h2>গুরুত্বপূর্ণ নির্দেশিকা</h2>
+<a href="#registry">সার্ভে খতিয়ান অনুসন্ধান →</a>
+<a href="#registry">নামজারি খতিয়ান যাচাই →</a>
+<a href="#registry">মৌজা ভিত্তিক খতিয়ান বই →</a>
+<a href="#registry">মৌজা ভিত্তিক দাগ বই →</a>
+<a href="#mouza-map">মৌজা ম্যাপ ডাউনলোড →</a>
+<a href="https://dlrms.land.gov.bd/" target="_blank" rel="noopener">DLRMS ভিজিট করুন →</a>
+<a href="https://ldtax.gov.bd/" target="_blank" rel="noopener">রাজস্ব আদায় ও রশিদ যাচাই →</a>
+<a href="https://minland.gov.bd/" target="_blank" rel="noopener">ভূমি মন্ত্রণালয় →</a>
+</div>
+<div class="panel"><h2>আপডেট ও ঘোষণা</h2>
+<p><b>সার্ভে খতিয়ান গাইড আপডেট</b><br><span style="color:var(--muted)">নতুন ধাপ-ধাপে নির্দেশনা ও FAQ যুক্ত হয়েছে যাতে CS/SA/RS/BS খতিয়ান দ্রুত যাচাই করা যায়।</span></p><hr style="margin:12px 0;border:0;border-top:1px solid var(--line)">
+<p><b>নামজারি খতিয়ান ট্র্যাকিং</b><br><span style="color:var(--muted)">নতুন ড্যাশবোর্ডে আবেদন নম্বর দিয়ে Mutation অবস্থা, খাজনা ও মালিকানা আপডেট এক জায়গায় দেখা যাবে।</span></p><hr style="margin:12px 0;border:0;border-top:1px solid var(--line)">
+<p><b>ফ্রি মৌজা ম্যাপ ব্রাউজার</b><br><span style="color:var(--muted)">জেলার ভিত্তিতে ডিজিটাল মৌজা ম্যাপ দেখুন, প্রিভিউ করুন এবং উচ্চ-রেজোলিউশনের PDF ডাউনলোড করুন।</span></p>
+</div>
+</div>
+</section>
+</div>
+<footer><div class="wrap">
+<div><h4>গুরুত্বপূর্ণ লিংক</h4><a href="#registry">সার্ভে খতিয়ান অনুসন্ধান</a><a href="#registry">নামজারি খতিয়ান যাচাই</a><a href="#registry">মৌজা ভিত্তিক খতিয়ান বই</a><a href="#mouza-map">মৌজা ম্যাপ ডাউনলোড</a></div>
+<div><h4>তথ্য ও যোগাযোগ</h4><a href="#registry">তথ্য খুঁজুন</a><a href="#support">আমাদের সম্পর্কে</a><a href="#support">দায়িত্ব অস্বীকার</a><a href="#support">গোপনীয়তা নীতি</a><a href="#support">শর্তাবলী</a></div>
+<div><h4>যোগাযোগ ও সাপোর্ট</h4><p>সরকারি ভূমিসেবা হটলাইন: ১৬১২২</p><p>এটি সরকারি পোর্টাল নয় — স্বাধীন তথ্যসহায়ক প্ল্যাটফর্ম।</p></div>
+</div><div class="copy">© 2026 ই পর্চা — সর্বস্বত্ব সংরক্ষিত। তথ্যসূত্র: land.gov.bd</div></footer>
+<div class="modal" id="modal"><div class="box">
+<h3 id="mTitle">খতিয়ান</h3><div id="mBody"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+<button class="btn small" onclick="downloadCurrentPdf()">PDF ডাউনলোড</button>
+<button class="btn small" style="background:#fff;color:var(--accent);border:1px solid var(--accent)" onclick="openPrintForm()">প্রিন্ট ফর্ম</button>
+<button class="btn small" style="background:#eee;color:#333" onclick="closeModal()">বন্ধ করুন</button>
+</div><p id="mNote" style="font-size:13px;color:var(--muted);margin-top:10px"></p>
+</div></div>
+<script>
+const $=id=>document.getElementById(id);
+const MAP_ROOTS=[{name:'ময়মনসিংহ',rootId:'1yz7rvncGb7_mmX8LpXQ9i9uXqCyNtXIy'},{name:'সিলেট',rootId:'1SK9lMCsSILn63th-Pea9vx1z6GcatJdA'},{name:'রংপুর',rootId:'1qBFuGLwumUBaqmBfMgRInF5JlBfMnvUI'},{name:'রাজশাহী',rootId:'1zTknpGYjKU2PkVYda0VZ6lcCLMaAeTq2'},{name:'খুলনা',rootId:'1Ecdt0T-kCp_A2SU0_cIQ1koJVs7lRU9Y'},{name:'ঢাকা',rootId:'1sP964F_b1GGxdjMNvmlgbiG7RRdtsfEA'},{name:'চট্টগ্রাম',rootId:'11U2Kni2vidrhCfD2JuK_vshognSGceQR'},{name:'বরিশাল',rootId:'1wLlBTplC2Z_Ll3o3puDhOLDABnCHTA9Z'}];
+let mode='survey', divisions=[], districts=[], upazilas=[], surveys=[], mouzas=[], khatians=[];
+let sel={div:null,dis:null,upa:null,sur:null,mou:null}, currentKhatian=null, currentDetail=null;
+async function api(path,params={}){const q=new URLSearchParams({path,...params});const r=await fetch('/api/dlrms?'+q);if(!r.ok)throw new Error('API '+r.status);const j=await r.json();if(!j.success)throw new Error(j.message||'API error');return j.data;}
+async function postApi(url,body){const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return r;}
+function setStatus(t){$('status').textContent=t;}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function toggleFaq(b){const a=b.nextElementSibling;a.style.display=a.style.display==='block'?'none':'block';}
+function setMode(m){mode=m;$('modeSurvey').classList.toggle('active',m==='survey');$('modeNamjari').classList.toggle('active',m==='namjari');$('regTitle').firstChild.textContent=m==='survey'?'সার্ভে খতিয়ানের তথ্য ':'নামজারী খতিয়ানের তথ্য ';$('step2').textContent=m==='survey'?'সার্ভে ধরন নির্বাচন করে মৌজার তালিকা থেকে JL নম্বর বাছাই করুন।':'মৌজার তালিকা থেকে JL নম্বর বাছাই করুন।';sel.sur=null;sel.mou=null;mouzas=[];khatians=[];renderLists();renderKhatians();loadMouzas();}
+async function init(){
+  try{setStatus('তথ্য লোড হচ্ছে…');const [d,di,u,s]=await Promise.all([api('divisions'),api('districts'),api('upazilas'),api('surveys')]);divisions=d;districts=di;upazilas=u;surveys=s;setStatus('লাইভ ডাটা: '+d.length+' বিভাগ, '+di.length+' জেলা, '+u.length+' উপজেলা — API থেকে তাজা তথ্য আসছে।');renderLists();renderMapDivs();}
+  catch(e){setStatus('তথ্য লোড করতে সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পরে আবার চেষ্টা করুন। ('+esc(e.message)+')');}
+}
+function listHtml(items,selId,fn,label){if(!items.length)return '<div class="empty">কোনো তথ্য পাওয়া যায়নি।</div>';return items.map((it,i)=>'<button class="'+(selId===it.ID||selId===it.id?'sel':'')+'" onclick="'+fn+'('+i+')">'+esc(label(it))+'</button>').join('');}
+function renderLists(){
+  const fd=$('fDiv').value.trim(),fdi=$('fDis').value.trim(),fu=$('fUpa').value.trim(),fm=$('fMou').value.trim();
+  $('listDiv').innerHTML=listHtml(divisions.filter(x=>!fd||x.NAME.includes(fd)),sel.div?sel.div.ID:null,'pickDiv',x=>x.NAME);
+  $('listDis').innerHTML=sel.div?listHtml(districts.filter(x=>x.DIVISION_BBS_CODE===sel.div.BBS_CODE&&(!fdi||x.NAME.includes(fdi))),sel.dis?sel.dis.ID:null,'pickDis',x=>x.NAME):'<div class="empty">প্রথমে বিভাগ নির্বাচন করুন।</div>';
+  $('listUpa').innerHTML=sel.dis?listHtml(upazilas.filter(x=>x.DISTRICT_BBS_CODE===sel.dis.BBS_CODE&&(!fu||x.NAME.includes(fu))),sel.upa?sel.upa.ID:null,'pickUpa',x=>x.NAME):'<div class="empty">প্রথমে জেলা নির্বাচন করুন।</div>';
+  $('listSur').innerHTML=mode==='namjari'?'<button class="sel">নামজারি (Mutation)</button>':(sel.upa?listHtml(surveys,sel.sur?sel.sur.SURVEY_ID:null,'pickSur',x=>x.LOCAL_NAME+' ('+x.SURVEY_ID+')'):'<div class="empty">প্রথমে উপজেলা নির্বাচন করুন।</div>');
+  $('listMou').innerHTML=mouzas.length?listHtml(mouzas.filter(x=>!fm||x.MOUZA_NAME.includes(fm)||String(x.JL_NUMBER).includes(fm)),sel.mou?sel.mou.ID:null,'pickMou',x=>x.JL_NUMBER+' · '+x.MOUZA_NAME):'<div class="empty">প্রথমে সার্ভে নির্বাচন করুন।</div>';
+}
+window.pickDiv=i=>{sel.div=divisions.filter(x=>!$('fDiv').value.trim()||x.NAME.includes($('fDiv').value.trim()))[i];sel.dis=sel.upa=sel.sur=sel.mou=null;mouzas=[];khatians=[];renderLists();renderKhatians();};
+window.pickDis=i=>{const list=districts.filter(x=>x.DIVISION_BBS_CODE===sel.div.BBS_CODE&&(!$('fDis').value.trim()||x.NAME.includes($('fDis').value.trim())));sel.dis=list[i];sel.upa=sel.sur=sel.mou=null;mouzas=[];khatians=[];renderLists();renderKhatians();};
+window.pickUpa=i=>{const list=upazilas.filter(x=>x.DISTRICT_BBS_CODE===sel.dis.BBS_CODE&&(!$('fUpa').value.trim()||x.NAME.includes($('fUpa').value.trim())));sel.upa=list[i];sel.sur=sel.mou=null;mouzas=[];khatians=[];renderLists();renderKhatians();surveys2();loadMouzas();};
+async function surveys2(){if(mode==='namjari'||!sel.dis||!sel.upa)return;try{surveys=await api('upazilas/surveys',{DISTRICT_BBS_CODE:sel.dis.BBS_CODE,UPAZILA_BBS_CODE:sel.upa.BBS_CODE});}catch(e){surveys=[];}renderLists();}
+window.pickSur=i=>{sel.sur=surveys[i];sel.mou=null;mouzas=[];khatians=[];renderLists();renderKhatians();loadMouzas();};
+window.pickMou=i=>{const fm=$('fMou').value.trim();const list=mouzas.filter(x=>!fm||x.MOUZA_NAME.includes(fm)||String(x.JL_NUMBER).includes(fm));sel.mou=list[i];loadKhatians();renderLists();};
+async function loadMouzas(){
+  if(!sel.dis||!sel.upa)return;if(mode==='survey'&&!sel.sur)return;
+  setStatus('মৌজার তালিকা লোড হচ্ছে…');
+  const params={DISTRICT_BBS_CODE:sel.dis.BBS_CODE,UPAZILA_BBS_CODE:sel.upa.BBS_CODE,X_DISTRICT_EN:sel.dis.NAME_EN,X_UPAZILA_EN:sel.upa.NAME_EN};
+  if(mode==='namjari'){params.SURVEY='MUTATION';params.X_SURVEY_KEY='MUTATION';}
+  else{const s=surveys.find(x=>x.SURVEY_ID===sel.sur.SURVEY_ID);params.X_SURVEY_KEY=s?(s.KEY||''):'';params.SURVEY_ID=sel.sur.SURVEY_ID;}
+  try{mouzas=await api('mouzas/jl-numbers',params);setStatus('মৌজা পাওয়া গেছে: '+mouzas.length+'টি — একটি বাছাই করুন।');}catch(e){mouzas=[];setStatus('মৌজার তালিকা লোড করতে সমস্যা হয়েছে। একটু পরে আবার চেষ্টা করুন।');}
+  renderLists();
+}
+function surveyKeyForKhatian(){if(mode==='namjari')return 'MUTATION';const s=surveys.find(x=>x.SURVEY_ID===(sel.sur?sel.sur.SURVEY_ID:null));return s?(s.KEY||'').toUpperCase():'';}
+async function loadKhatians(){
+  if(!sel.mou)return;setStatus('খতিয়ান তালিকা লোড হচ্ছে…');$('kBody').innerHTML='<tr><td colspan="5">তথ্য লোড হচ্ছে…</td></tr>';
+  const survey=surveyKeyForKhatian();
+  try{
+    const first=await api('index-khatian/'+survey,{SURVEY:survey,JL_NUMBER_ID:sel.mou.ID,PAGE_NO:1,PAGE_SIZE:100,X_MOUZA_NAME:sel.mou.MOUZA_NAME,X_JL_NUMBER:sel.mou.JL_NUMBER});
+    const totalPages=Math.max((first.meta&&first.meta.totalPages)||1,1);let all=[...(first.items||[])];
+    const rest=Array.from({length:totalPages-1},(_,i)=>i+2);
+    for(let k=0;k<rest.length;k+=4){const batch=await Promise.all(rest.slice(k,k+4).map(p=>api('index-khatian/'+survey,{SURVEY:survey,JL_NUMBER_ID:sel.mou.ID,PAGE_NO:p,PAGE_SIZE:100,X_MOUZA_NAME:sel.mou.MOUZA_NAME,X_JL_NUMBER:sel.mou.JL_NUMBER}).catch(()=>({items:[]})))) ;batch.forEach(r=>all.push(...(r.items||[])));}
+    const seen=new Set();khatians=all.filter(x=>{const key=x.ID+':'+x.KHATIAN_NO;if(seen.has(key))return false;seen.add(key);return true;});
+    setStatus('মোট ফলাফল: '+khatians.length+' — '+sel.div.NAME+' › '+sel.dis.NAME+' › '+sel.upa.NAME+' › '+survey+' › JL '+sel.mou.JL_NUMBER+' '+sel.mou.MOUZA_NAME);
+  }catch(e){khatians=[];setStatus('খতিয়ান লোড করতে সমস্যা হয়েছে। ('+esc(e.message)+')');}
+  renderKhatians();
+}
+function renderKhatians(){
+  const q=$('kSearch').value.trim().toLowerCase();
+  const list=khatians.filter(x=>!q||String(x.KHATIAN_NO).includes(q)||(x.DAGS||'').includes(q)||(x.OWNERS||'').toLowerCase().includes(q)||(x.GUARDIANS||'').toLowerCase().includes(q));
+  $('kCount').textContent=khatians.length?('মোট '+khatians.length+'টি খতিয়ান'+(q?(' — "'+q+'" দিয়ে '+list.length+'টি মিলেছে'):'')):'খতিয়ান দেখতে মৌজা নির্বাচন করুন।';
+  $('kBody').innerHTML=list.length?list.map(x=>{const idx=khatians.indexOf(x);return '<tr><td>'+esc(x.KHATIAN_NO)+'</td><td>'+esc(x.OWNERS||'তথ্য পাওয়া যায়নি')+'</td><td>'+esc((x.DAGS||'').slice(0,80))+((x.DAGS||'').length>80?'…':'')+'</td><td>'+esc(x.TOTAL_LAND||'—')+'</td><td><button class="btn small" onclick="previewKhatian('+idx+')">প্রিভিউ</button> <button class="btn small" style="background:#fff;color:var(--accent);border:1px solid var(--accent)" onclick="downloadKhatian('+idx+')">PDF</button></td></tr>';}).join(''):'<tr><td colspan="5">কোনো খতিয়ান পাওয়া যায়নি।</td></tr>';
+}
+function khatianPayload(x){return {survey:surveyKeyForKhatian(),division:sel.div.NAME,district:sel.dis.NAME,upazila:sel.upa.NAME,mouza:sel.mou.MOUZA_NAME,jlNo:sel.mou.JL_NUMBER,jlNumberId:sel.mou.ID,khatianNo:x.KHATIAN_NO,owners:x.OWNERS||'',guardians:x.GUARDIANS||'',dags:x.DAGS||'',totalLand:x.TOTAL_LAND||''};}
+async function previewKhatian(idx){
+  const x=khatians[idx];currentKhatian=x;$('mTitle').textContent='খতিয়ান নং '+x.KHATIAN_NO+' — JL '+sel.mou.JL_NUMBER+' '+sel.mou.MOUZA_NAME;$('mBody').innerHTML='তথ্য লোড হচ্ছে…';$('modal').classList.add('open');
+  try{const r=await postApi('/api/khatian-record',{survey:surveyKeyForKhatian(),divisionName:sel.div.NAME,districtName:sel.dis.NAME,upazilaName:sel.upa.NAME,mouzaName:sel.mou.MOUZA_NAME,jlNo:sel.mou.JL_NUMBER,jlNumberId:sel.mou.ID,khatianNo:x.KHATIAN_NO,ownerHint:x.OWNERS||''});const j=await r.json();currentDetail=j.success?j:x;}catch(e){currentDetail=x;}
+  const d=currentDetail||x;
+  $('mBody').innerHTML='<div class="kv"><b>মালিক</b><span>'+esc(d.owners||d.OWNERS||'—')+'</span><b>অভিভাবক</b><span>'+esc(d.guardians||d.GUARDIANS||'—')+'</span><b>মোট জমি</b><span>'+esc(d.totalLand||d.TOTAL_LAND||'—')+' একর</span><b>দাগ নম্বর</b><span>'+esc(d.dags||d.DAGS||'—')+'</span></div><p style="font-size:13px;color:var(--muted)">বিভাগ: '+esc(sel.div.NAME)+' · জেলা: '+esc(sel.dis.NAME)+' · উপজেলা: '+esc(sel.upa.NAME)+' · জরিপ: '+esc(surveyKeyForKhatian())+'</p>';
+}
+function closeModal(){$('modal').classList.remove('open');}
+async function downloadKhatian(idx){const x=khatians[idx];currentKhatian=x;await downloadPdfFor(x);}
+async function downloadCurrentPdf(){if(currentKhatian)await downloadPdfFor(currentKhatian);}
+async function downloadPdfFor(x){
+  $('mNote').textContent='PDF তৈরি হচ্ছে… (মূল সার্ভার মাঝে মাঝে ব্যস্ত থাকে, প্রয়োজনে একবার রিট্রাই হবে)';
+  const payload=khatianPayload(x);
+  let r=await postApi('/api/namjari-pdf',payload);
+  if(!r.ok){await new Promise(res=>setTimeout(res,5000));r=await postApi('/api/namjari-pdf',payload);}
+  if(r.ok&&((r.headers.get('content-type')||'').includes('application/pdf'))){
+    const blob=await r.blob();const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='khatian-'+surveyKeyForKhatian().toLowerCase()+'-JL'+sel.mou.JL_NUMBER+'-No'+x.KHATIAN_NO+'.pdf';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),60000);$('mNote').textContent='PDF ডাউনলোড শুরু হয়েছে।';
+  }else{$('mNote').textContent='PDF এখন তৈরি করা যায়নি — প্রিন্ট ফর্ম খুলে Print → Save as PDF করুন।';openPrintForm();}
+}
+async function openPrintForm(){if(!currentKhatian)return;const r=await postApi('/api/namjari-form',khatianPayload(currentKhatian));const html=await r.text();const w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}}
+function downloadBook(){
+  if(!khatians.length||!sel.mou){alert('আগে একটি মৌজা নির্বাচন করুন।');return;}
+  const rows=khatians.map(x=>'<tr><td>'+esc(x.KHATIAN_NO)+'</td><td>'+esc(x.OWNERS||'')+'</td><td>'+esc(x.DAGS||'')+'</td><td>'+esc(x.TOTAL_LAND||'')+'</td></tr>').join('');
+  const html='<!DOCTYPE html><html lang="bn"><head><meta charset="UTF-8"><title>খতিয়ান বই — JL '+esc(sel.mou.JL_NUMBER)+' '+esc(sel.mou.MOUZA_NAME)+'</title><style>body{font-family:sans-serif}table{width:100%;border-collapse:collapse}td,th{border:1px solid #999;padding:6px;font-size:13px}</style></head><body><h2>খতিয়ান বই — '+esc(sel.mou.MOUZA_NAME)+' (JL '+esc(sel.mou.JL_NUMBER)+')</h2><p>'+esc(sel.div.NAME)+' › '+esc(sel.dis.NAME)+' › '+esc(sel.upa.NAME)+' · মোট '+khatians.length+'টি খতিয়ান</p><table><tr><th>খতিয়ান</th><th>মালিক</th><th>দাগ</th><th>মোট জমি</th></tr>'+rows+'</table><p>ব্রাউজারে Print → Save as PDF করলে PDF পাবেন।</p><script>setTimeout(()=>window.print(),400)<\/script></body></html>';
+  const blob=new Blob([html],{type:'text/html'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='khatian-book-JL'+sel.mou.JL_NUMBER+'.html';a.click();
+}
+function resetAll(){sel={div:null,dis:null,upa:null,sur:null,mou:null};mouzas=[];khatians=[];$('kSearch').value='';renderLists();renderKhatians();setStatus('নতুন করে খুঁজুন — বিভাগ নির্বাচন করুন।');}
+function renderMapDivs(){$('mapDiv').innerHTML=MAP_ROOTS.map(d=>'<button onclick="browseMap(\''+d.rootId+'\',\''+esc(d.name)+'\')">'+esc(d.name)+'</button>').join('');}
+async function browseMap(parentId,label){
+  $('mapList').innerHTML='<div class="empty">লোড হচ্ছে…</div>';
+  try{const r=await postApi('/api/mouza-map-browse',{parentId});const j=await r.json();const files=(j.data&&j.data.files)||j.files||[];
+    $('mapList').innerHTML=files.length?files.map((f,i)=>'<button onclick="openMapFile('+i+',\''+esc(f.name)+'\')">'+esc(f.name)+' '+(f.mimeType&&f.mimeType.includes('folder')?'ফোল্ডার':'ফাইল')+' '+(f.size?('· '+Math.round(f.size/1048576)+' MB'):'')+'</button>').join(''):'<div class="empty">কোনো ফাইল পাওয়া যায়নি।</div>';
+    window._mapFiles=files;
+  }catch(e){$('mapList').innerHTML='<div class="empty">ম্যাপ লোড করতে সমস্যা হয়েছে।</div>';}
+}
+async function openMapFile(i,name){
+  const f=window._mapFiles[i];if(!f)return;
+  if(f.mimeType&&f.mimeType.includes('folder')){browseMap(f.id,f.name);return;}
+  $('mapPreview').innerHTML='<b>'+esc(name)+'</b><br>প্রিভিউ লোড হচ্ছে…';
+  try{const r=await postApi('/api/mouza-map-file',{fileId:f.id});const j=await r.json();const d=j.data||j;
+    $('mapPreview').innerHTML='<b>'+esc(name)+'</b><br>ফাইল সাইজ: '+(d.size?Math.round(d.size/1048576)+' MB':'—')+'<br><br><a class="btn small" target="_blank" rel="noopener" href="https://drive.google.com/file/d/'+f.id+'/view">ম্যাপ দেখুন / ডাউনলোড করুন</a>';
+  }catch(e){$('mapPreview').innerHTML='<b>'+esc(name)+'</b><br><a class="btn small" target="_blank" rel="noopener" href="https://drive.google.com/file/d/'+f.id+'/view">ম্যাপ দেখুন / ডাউনলোড করুন</a>';}
+}
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
+init();
+</script>
+</body>
+</html>
